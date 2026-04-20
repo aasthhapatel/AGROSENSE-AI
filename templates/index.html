@@ -1,0 +1,594 @@
+!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgroSense AI — Intelligent Crop Intelligence Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,300;1,9..144,700&family=Cabinet+Grotesk:wght@400;500;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="{{ url_for('static', filename='newscript.js') }}" defer></script>
+</head>
+<body>
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#home" class="nav-logo">
+    <div class="logo-gem">🌿</div>
+    AgroSense AI
+  </a>
+  <ul class="nav-links">
+    <li><a href="#home">HOME</a></li>
+    <li><a href="#detect">DETECT DISEASE</a></li>
+    <li><a href="#tools">TOOLS</a></li>
+    <li><a href="#risk-predictor">RISK PREDICTOR</a></li>
+    <li><a href="#how">HOW IT WORKS</a></li>
+    <li><a href="#weather">WEATHER</a></li>
+    <li><a href="#detect" class="nav-cta">START FREE →</a></li>
+  </ul>
+</nav>
+ 
+<!-- HERO -->
+<section id="home">
+  <div class="hero-bg-photo"></div>
+  <canvas class="three-canvas" id="hero-canvas"></canvas>
+  <div class="hero-content">
+    <div>
+      <div class="hero-eyebrow">AI-Powered Crop Intelligence</div>
+      <h1 class="hero-title">
+        Grow Smarter.<br>
+        <em>Farm Stronger.</em><br>
+        Harvest More.
+      </h1>
+      <p class="hero-subtitle">Upload a leaf photo for instant disease detection. Access precision calculators for fertilizer, irrigation, soil, yield & more — all in one platform built for Farmers.</p>
+      <div class="hero-actions">
+        <a href="#detect" class="btn-primary">📸 Diagnose Your Crop</a>
+        <a href="#tools" class="btn-outline">Explore Tools →</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-num">90%</div>
+          <div class="hero-stat-label">AI Accuracy</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">6</div>
+          <div class="hero-stat-label">Smart Tools</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">50K+</div>
+          <div class="hero-stat-label">Images Trained</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-panel">
+      <div class="hero-card">
+        <div class="hci hci-g">🌾</div>
+        <div><div class="hcard-label">Detected</div><div class="hcard-val">Leaf Blight</div></div>
+      </div>
+      <div class="hero-card">
+        <div class="hci hci-w">💊</div>
+        <div><div class="hcard-label">Treatment</div><div class="hcard-val">Mancozeb 2g/L</div></div>
+      </div>
+      <div class="hero-card">
+        <div class="hci hci-c">📈</div>
+        <div><div class="hcard-label">Severity</div><div class="hcard-val">Moderate — Act Now</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-circle">↓</div>
+    Scroll to explore
+  </div>
+</section>
+ 
+<!-- FEATURES STRIP -->
+<div class="features-strip">
+  <div class="fp"><span>🤖</span> AI Disease Detection</div>
+  <div class="fdiv"></div>
+  <div class="fp"><span>🌿</span> Fertilizer Calculator</div>
+  <div class="fdiv"></div>
+  <div class="fp"><span>🛡️</span> Pesticide Advisor</div>
+  <div class="fdiv"></div>
+  <div class="fp"><span>💧</span> Irrigation Planner</div>
+  <div class="fdiv"></div>
+  <div class="fp"><span>🪱</span> Soil Analyzer</div>
+  <div class="fdiv"></div>
+  <div class="fp"><span>📈</span> Yield Predictor</div>
+</div>
+ 
+<!-- DETECT SECTION -->
+<section id="detect">
+  <canvas id="detect-canvas"></canvas>
+  <div class="detect-inner">
+    <div class="eyebrow reveal">AI Diagnosis</div>
+    <h2 class="sec-title reveal">Detect Crop Disease <em>in Seconds</em></h2>
+    <p class="sec-sub reveal">Photograph affected leaves, stems, or roots. Our CNN model identifies diseases, pests, and deficiencies instantly.</p>
+    <div class="detect-grid">
+      <div class="reveal-l detect-left-col">
+        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+          <input type="file" id="fileInput" accept="image/*" onchange="handleFileUpload(event)">
+          <img id="imagePreview" class="upload-preview" src="" alt="Preview">
+          <div id="uploadPlaceholder">
+            <div class="upload-icon">📷</div>
+            <div class="upload-title">Drop or click to upload</div>
+            <div class="upload-sub">JPG, PNG, WEBP — up to 10MB</div>
+            <button class="upload-btn" onclick="document.getElementById('fileInput').click();event.stopPropagation()">Choose File</button>
+          </div>
+        </div>
+        <button class="detect-btn" id="detectBtn" onclick="runDetection()">🔍 Detect Disease Now</button>
+      </div>
+      <div class="reveal-r">
+        <div class="loader-wrap" id="detectionLoader">
+          <div class="spinner"></div>
+          <div class="loader-text">Analyzing your crop image with AI…</div>
+        </div>
+        <div class="result-panel" id="resultPanel">
+          <div class="result-empty" id="resultEmpty">
+            <div class="result-empty-icon">🌱</div>
+            <h3>Awaiting Your Crop Image</h3>
+            <p>Upload a photo of your affected crop and click Detect Disease to get an instant AI diagnosis.</p>
+          </div>
+          <div id="resultContent" style="display:none">
+            <div class="result-header">
+              <div class="result-icon" id="resultIcon">🌿</div>
+              <div>
+                <div class="result-name" id="resultName">—</div>
+                <div class="result-badge" id="resultBadge">AI Diagnosis</div>
+              </div>
+            </div>
+            <div class="info-block">
+              <div class="info-block-label">Confidence: <span id="confScore" style="color:var(--mint)">—</span></div>
+            </div>
+            <div class="result-actions">
+              <button class="btn-download" onclick="downloadReport()">📄 Download Report</button>
+              <button class="btn-reset" onclick="resetDetection()">🔄 New Scan</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- TOOLS -->
+<section id="tools">
+  <canvas id="tools-canvas"></canvas>
+  <div class="tools-inner">
+    <div class="eyebrow reveal">Smart Farm Tools</div>
+    <h2 class="sec-title reveal">Everything Your Farm <em>Needs</em></h2>
+    <p class="sec-sub reveal">Precision agriculture tools powered by AI and agronomic science, designed for Indian farming conditions.</p>
+    <div class="tools-grid">
+      <div class="tool-card reveal" onclick="openModal('fertilizer')">
+        <span class="tool-icon">🌿</span>
+        <h3>Fertilizer Calculator</h3>
+        <p>Get precise NPK requirements tailored to your crop type, field size, growth stage, and unit system.</p>
+        <div class="tool-arrow">Calculate now →</div>
+      </div>
+      <div class="tool-card reveal" onclick="openModal('pesticide')" style="transition-delay:0.1s">
+        <div class="tool-badge">New</div>
+        <span class="tool-icon">🛡️</span>
+        <h3>Pesticide Calculator</h3>
+        <p>Exact dosages, tank count, pre-harvest intervals, and safety guidelines for your specific pest and crop.</p>
+        <div class="tool-arrow">Calculate now →</div>
+      </div>
+      <div class="tool-card reveal" onclick="openModal('farming')" style="transition-delay:0.2s">
+        <div class="tool-badge">New</div>
+        <span class="tool-icon">📊</span>
+        <h3>Profit Calculator</h3>
+        <p>Analyze cost vs. revenue, ROI, and breakeven price to make smarter decisions for your season.</p>
+        <div class="tool-arrow">Calculate now →</div>
+      </div>
+      <div class="tool-card reveal" onclick="openModal('irrigation')" style="transition-delay:0.05s">
+        <span class="tool-icon">💧</span>
+        <h3>Irrigation Planner</h3>
+        <p>Smart watering schedules based on your crop growth stage, soil type, and field area.</p>
+        <div class="tool-arrow">Plan now →</div>
+      </div>
+      <div class="tool-card reveal" onclick="openModal('soil')" style="transition-delay:0.15s">
+        <span class="tool-icon">🪱</span>
+        <h3>Soil Health Analyzer</h3>
+        <p>Input pH, organic carbon, and nutrient data to get a comprehensive soil health report with corrections.</p>
+        <div class="tool-arrow">Analyze now →</div>
+      </div>
+      <div class="tool-card reveal" onclick="openModal('yield')" style="transition-delay:0.25s">
+        <span class="tool-icon">📈</span>
+        <h3>Yield Predictor</h3>
+        <p>AI-powered yield estimation based on field conditions, irrigation method, soil health, and variety data.</p>
+        <div class="tool-arrow">Predict now →</div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- CROP DISEASE RISK PREDICTOR -->
+<section id="risk-predictor">
+  <canvas id="risk-canvas"></canvas>
+  <div class="risk-inner">
+    <div class="eyebrow reveal">ML Risk Engine</div>
+    <h2 class="sec-title reveal">Soil-Based Disease <em>Risk Predictor</em></h2>
+    <p class="sec-sub reveal">Enter your soil lab values to get an instant ML-powered disease vulnerability assessment for your crop — trained on 100,000 Indian field records.</p>
+ 
+    <div class="cdr-widget" id="cdrWidget">
+ 
+      <!-- HEADER -->
+      <div class="cdr-header">
+        <div class="cdr-header-inner">
+          <div class="cdr-icon">🌿</div>
+          <div class="cdr-title-block">
+            <h2>Crop Disease Risk Predictor</h2>
+            <p>Enter soil lab values to assess disease vulnerability</p>
+          </div>
+          <span class="cdr-badge">100K samples · ML</span>
+        </div>
+      </div>
+ 
+      <!-- BODY -->
+      <div class="cdr-body">
+ 
+        <!-- Crop selection -->
+        <div class="cdr-crop-row">
+          <div class="cdr-section-label">Crop</div>
+          <select class="cdr-crop-select" id="cropSelect">
+            <option value="">— Select your crop —</option>
+            <option>Apple</option><option>Arecanut</option><option>Banana</option>
+            <option>Barley</option><option>Bitter Gourd</option><option>Black Gram</option>
+            <option>Bottle Gourd</option><option>Brinjal</option><option>Cabbage</option>
+            <option>Capsicum</option><option>Carrot</option><option>Castor</option>
+            <option>Cauliflower</option><option>Chickpea</option><option>Cocoa</option>
+            <option>Coconut</option><option>Coffee</option><option>Cotton</option>
+            <option>Field Pea</option><option>Grapes</option><option>Green Gram</option>
+            <option>Groundnut</option><option>Guava</option><option>Jute</option>
+            <option>Lentil</option><option>Maize</option><option>Mango</option>
+            <option>Millet</option><option>Muskmelon</option><option>Mustard</option>
+            <option>Okra</option><option>Onion</option><option>Orange</option>
+            <option>Papaya</option><option>Peas</option><option>Pigeon Pea</option>
+            <option>Pineapple</option><option>Pomegranate</option><option>Potato</option>
+            <option>Ragi</option><option>Rice</option><option>Rubber</option>
+            <option>Sapota</option><option>Sesame</option><option>Sorghum</option>
+            <option>Soybean</option><option>Spinach</option><option>Sugarcane</option>
+            <option>Sunflower</option><option>Tea</option><option>Tobacco</option>
+            <option>Tomato</option><option>Watermelon</option><option>Wheat</option>
+          </select>
+        </div>
+ 
+        <!-- Soil Lab Results -->
+        <div class="cdr-section-label">Soil Lab Results</div>
+        <div class="cdr-grid">
+          <div class="cdr-field">
+            <label>Soil pH <span class="cdr-unit">unitless</span></label>
+            <div class="cdr-input-wrap">
+              <input type="number" id="cdrPH" placeholder="e.g. 6.5" step="0.01" min="4.5" max="8.5">
+            </div>
+            <div class="cdr-range">Normal: 4.5 – 8.5</div>
+          </div>
+          <div class="cdr-field">
+            <label>Nitrogen <span class="cdr-unit">ppm</span></label>
+            <div class="cdr-input-wrap">
+              <input type="number" id="cdrNitrogen" placeholder="e.g. 60" step="0.1" min="15" max="110">
+            </div>
+            <div class="cdr-range">Range: 15 – 110 ppm</div>
+          </div>
+          <div class="cdr-field">
+            <label>Phosphorus <span class="cdr-unit">ppm</span></label>
+            <div class="cdr-input-wrap">
+              <input type="number" id="cdrPhosphorus" placeholder="e.g. 20" step="0.1" min="5" max="50">
+            </div>
+            <div class="cdr-range">Range: 5 – 50 ppm</div>
+          </div>
+          <div class="cdr-field">
+            <label>Potassium <span class="cdr-unit">ppm</span></label>
+            <div class="cdr-input-wrap">
+              <input type="number" id="cdrPotassium" placeholder="e.g. 50" step="0.1" min="10" max="120">
+            </div>
+            <div class="cdr-range">Range: 10 – 120 ppm</div>
+          </div>
+          <div class="cdr-field">
+            <label>Organic Matter <span class="cdr-unit">%</span></label>
+            <div class="cdr-input-wrap">
+              <input type="number" id="cdrOrganicMatter" placeholder="e.g. 2.5" step="0.01" min="0.1" max="5">
+            </div>
+            <div class="cdr-range">Range: 0.1 – 5.0 %</div>
+          </div>
+          <div class="cdr-field">
+            <label>EC <span class="cdr-unit">mS/cm</span></label>
+            <div class="cdr-input-wrap">
+              <input type="number" id="cdrEC" placeholder="e.g. 1.2" step="0.01" min="0.1" max="4">
+            </div>
+            <div class="cdr-range">Range: 0.1 – 4.0 mS/cm</div>
+          </div>
+        </div>
+ 
+        <!-- Optional field conditions -->
+        <button class="cdr-optional-toggle" id="cdrOptToggle" onclick="cdrToggleOptional()">
+          <span class="arrow">▶</span> Optional: Field Conditions
+        </button>
+        <div class="cdr-optional-grid" id="cdrOptGrid">
+          <div class="cdr-field">
+            <label>Moisture <span class="cdr-unit">%</span></label>
+            <div class="cdr-input-wrap">
+              <input type="number" id="cdrMoisture" placeholder="e.g. 40" step="0.1" min="10" max="90">
+            </div>
+            <div class="cdr-range">10 – 90 %</div>
+          </div>
+          <div class="cdr-field">
+            <label>Temperature <span class="cdr-unit">°C</span></label>
+            <div class="cdr-input-wrap">
+              <input type="number" id="cdrTemperature" placeholder="e.g. 28" step="0.1" min="18" max="38">
+            </div>
+            <div class="cdr-range">18 – 38 °C</div>
+          </div>
+          <div class="cdr-field">
+            <label>Humidity <span class="cdr-unit">%</span></label>
+            <div class="cdr-input-wrap">
+              <input type="number" id="cdrHumidity" placeholder="e.g. 70" step="0.1" min="40" max="95">
+            </div>
+            <div class="cdr-range">40 – 95 %</div>
+          </div>
+        </div>
+ 
+        <!-- Submit -->
+        <button class="cdr-submit" onclick="cdrPredict()">
+          🔬 Analyse Disease Risk
+        </button>
+ 
+        <!-- Result -->
+        <div class="cdr-result" id="cdrResult">
+          <div class="cdr-result-header" id="cdrResultHeader">
+            <div>
+              <div class="cdr-risk-badge" id="cdrRiskLabel">—</div>
+              <div class="cdr-risk-meter">
+                <div class="cdr-meter-dot"></div>
+                <div class="cdr-meter-dot"></div>
+                <div class="cdr-meter-dot"></div>
+              </div>
+            </div>
+            <div class="cdr-result-meta">
+              <h3 id="cdrResultTitle">Disease Risk Level</h3>
+              <p id="cdrResultCrop"></p>
+            </div>
+          </div>
+          <div class="cdr-advisories" id="cdrAdvisories"></div>
+          <div class="cdr-factors" id="cdrFactorsSection">
+            <div class="cdr-factors-title">Key Soil Factors Identified</div>
+            <div class="cdr-factor-pills" id="cdrFactorPills"></div>
+          </div>
+          <div class="cdr-disclaimer">
+            Prediction based on 100,000 Indian crop records · Always consult a local agronomist
+          </div>
+        </div>
+ 
+        <button class="cdr-reset" id="cdrResetBtn" style="display:none" onclick="cdrReset()">↩ Analyse another sample</button>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- HOW IT WORKS -->
+<section id="how">
+  <canvas id="how-canvas"></canvas>
+  <div class="how-inner">
+    <div class="eyebrow reveal">Simple Process</div>
+    <h2 class="sec-title reveal">From Photo to <em>Prescription</em></h2>
+    <p class="sec-sub reveal">Our AI turns a single crop photo into a complete treatment plan in under 10 seconds.</p>
+    <div class="steps-grid">
+      <div class="step-card reveal" style="transition-delay:0s">
+        <div class="step-num">01</div>
+        <div class="step-ico">📸</div>
+        <h3>Upload Your Crop Photo</h3>
+        <p>Take a clear photo of affected leaves, stems, or roots. Use your phone camera or any image.</p>
+      </div>
+      <div class="step-card reveal" style="transition-delay:0.12s">
+        <div class="step-num">02</div>
+        <div class="step-ico">🤖</div>
+        <h3>AI Analyzes Instantly</h3>
+        <p>Our CNN model trained on 50,000+ images identifies the exact disease, pest, or deficiency.</p>
+      </div>
+      <div class="step-card reveal" style="transition-delay:0.24s">
+        <div class="step-num">03</div>
+        <div class="step-ico">📋</div>
+        <h3>Get Detailed Report</h3>
+        <p>Receive severity assessment, confidence score, symptom description, and tailored advisory.</p>
+      </div>
+      <div class="step-card reveal" style="transition-delay:0.36s">
+        <div class="step-num">04</div>
+        <div class="step-ico">💊</div>
+        <h3>Apply & Track Recovery</h3>
+        <p>Follow precise treatment actions, dosages, and timings. Download your report for reference.</p>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- WEATHER -->
+<section id="weather">
+  <canvas id="weather-canvas"></canvas>
+  <div class="weather-inner">
+    <div class="eyebrow reveal">Agro Weather Intelligence</div>
+    <h2 class="sec-title reveal">Farm-Specific <em>Weather Forecast</em></h2>
+    <p class="sec-sub reveal">Real-time conditions + 5-day forecast powered by Open-Meteo — with crop-specific farming advisories.</p>
+    <div class="weather-location-bar reveal">
+      <div class="location-input-wrap">
+        <span>📍</span>
+        <input class="location-input" id="locationInput" type="text" placeholder="Enter city, e.g. Ahmedabad" onkeydown="if(event.key==='Enter')searchWeather()">
+      </div>
+      <button class="weather-search-btn" onclick="searchWeather()">🔍 Search</button>
+      <button class="weather-locate-btn" onclick="locateMe()">📡 Use My Location</button>
+    </div>
+    <div class="weather-alert" id="weatherAlert">
+      <span style="font-size:1.2rem">⚠️</span>
+      <div id="alertText">Weather alert active in your area.</div>
+    </div>
+    <div class="weather-main-grid" id="weatherMainGrid">
+      <div id="weatherSkeleton" style="grid-column:1/-1">
+        <div class="weather-skeleton">
+          <div class="skel-line" style="width:40%;height:20px"></div>
+          <div class="skel-line" style="width:60%;height:60px"></div>
+          <div class="skel-line" style="width:80%"></div>
+          <div class="skel-line" style="width:55%"></div>
+        </div>
+      </div>
+      <div class="weather-current-card" id="currentCard" style="display:none">
+        <div class="wc-location">📍 Current Location</div>
+        <div class="wc-city" id="wcCity">—</div>
+        <div class="wc-main">
+          <div class="wc-icon-big" id="wcIcon">⛅</div>
+          <div>
+            <div class="wc-temp-big"><span id="wcTemp">—</span>°</div>
+            <div class="wc-condition" id="wcCondition">—</div>
+            <div class="wc-feels">Feels like <span id="wcFeels">—</span>°C</div>
+          </div>
+        </div>
+        <div class="wc-details-grid">
+          <div class="wc-detail"><div class="wc-detail-label">💧 Humidity</div><div class="wc-detail-value" id="wcHumidity">—</div><div class="wc-detail-sub">Relative humidity</div></div>
+          <div class="wc-detail"><div class="wc-detail-label">💨 Wind</div><div class="wc-detail-value" id="wcWind">—</div><div class="wc-detail-sub" id="wcWindDir">—</div></div>
+          <div class="wc-detail"><div class="wc-detail-label">🌧️ Rain Prob.</div><div class="wc-detail-value" id="wcRain">—</div><div class="wc-detail-sub">Today</div></div>
+          <div class="wc-detail"><div class="wc-detail-label">☀️ UV Index</div><div class="wc-detail-value" id="wcUV">—</div><div class="wc-detail-sub" id="wcUVLabel">—</div></div>
+          <div class="wc-detail"><div class="wc-detail-label">👁️ Visibility</div><div class="wc-detail-value" id="wcVis">—</div><div class="wc-detail-sub">km</div></div>
+          <div class="wc-detail"><div class="wc-detail-label">🌡️ Dew Point</div><div class="wc-detail-value" id="wcDew">—</div><div class="wc-detail-sub">°C</div></div>
+        </div>
+        <div class="sun-bar">
+          <div class="sun-item"><div class="sun-label">🌅 Sunrise</div><div class="sun-time" id="wcSunrise">—</div></div>
+          <div class="sun-track"><div class="sun-progress" id="sunProgress" style="width:50%"></div><div class="sun-dot" id="sunDot" style="left:50%"></div></div>
+          <div class="sun-item"><div class="sun-label">🌇 Sunset</div><div class="sun-time" id="wcSunset">—</div></div>
+        </div>
+      </div>
+      <div class="weather-right-panel" id="weatherRightPanel" style="display:none">
+        <div class="weather-tabs">
+          <button class="wtab active" onclick="switchTab('forecast')">📅 5-Day</button>
+          <button class="wtab" onclick="switchTab('hourly')">🕐 Hourly</button>
+          <button class="wtab" onclick="switchTab('advisory')">🌾 Farm Advisory</button>
+          <button class="wtab" onclick="switchTab('charts')">📊 Charts</button>
+        </div>
+        <div class="wtab-panel active" id="tab-forecast"><div class="forecast-grid" id="forecastGrid"></div></div>
+        <div class="wtab-panel" id="tab-hourly"><div class="hourly-scroll" id="hourlyScroll"></div></div>
+        <div class="wtab-panel" id="tab-advisory"><div class="ag-advisory-grid" id="advisoryGrid"></div></div>
+        <div class="wtab-panel" id="tab-charts">
+          <div class="rain-chart-wrap"><div class="rain-chart-title">🌧️ 5-Day Rain Probability (%)</div><div class="rain-bars" id="rainBars"></div></div>
+          <div class="temp-range-wrap"><div class="rain-chart-title">🌡️ Temperature Range (°C)</div><div id="tempRanges"></div></div>
+        </div>
+      </div>
+      <div class="weather-error" id="weatherError" style="display:none;grid-column:1/-1">
+        <div style="font-size:3rem">🌥️</div>
+        <h3>Couldn't fetch weather data</h3>
+        <p id="weatherErrorMsg">Please check the city name or allow location access.</p>
+        <button class="weather-locate-btn" style="margin:16px auto 0;display:inline-flex" onclick="loadDefaultWeather()">Try Default (Ahmedabad)</button>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">🌿 AgroSense AI</div>
+      <p class="footer-desc">AI-powered crop intelligence platform helping Indian farmers detect diseases, optimize inputs, and maximize yield through precision agriculture technology.</p>
+    </div>
+    <div class="footer-col"><h4>Platform</h4><ul><li><a href="#detect">Disease Detection</a></li><li><a href="#tools">Fertilizer Calculator</a></li><li><a href="#tools">Pesticide Advisor</a></li><li><a href="#tools">Irrigation Planner</a></li></ul></div>
+    <div class="footer-col"><h4>Resources</h4><ul><li><a href="#">Cultivation Guides</a></li><li><a href="#">Disease Encyclopedia</a></li><li><a href="#">Pest Alerts</a></li><li><a href="#">API Documentation</a></li></ul></div>
+    <div class="footer-col"><h4>Support</h4><ul><li><a href="#">Help Center</a></li><li><a href="#">Contact Us</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Service</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 AgroSense AI — Final Year Project</span>
+    <span>🌿 Built with AI for Indian Farmers</span>
+  </div>
+</footer>
+ 
+<!-- CHATBOT -->
+<button class="chat-fab" onclick="toggleChat()" title="AI Crop Assistant">🤖</button>
+<div class="chat-window" id="chatWindow">
+  <div class="chat-header">
+    <div class="chat-avatar">🌿</div>
+    <div><h4>AgroSense Assistant</h4><p>AI Crop Advisor · Online</p></div>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <div class="chat-msg bot">👋 Hello! I'm your AI Crop Advisor. Ask me about diseases, fertilizers, market prices, or any farming question!</div>
+  </div>
+  <div class="chat-typing" id="chatTyping">AgroSense is typing…</div>
+  <div class="chat-input-row">
+    <input class="chat-input" id="chatInput" type="text" placeholder="Ask about your crops…" onkeydown="if(event.key==='Enter')sendChatMessage()">
+    <button class="chat-send" onclick="sendChatMessage()">→</button>
+  </div>
+</div>
+ 
+<!-- MODALS -->
+<div class="modal-overlay" id="fertilizerModal" onclick="closeModalOnOverlay(event,'fertilizerModal')">
+  <div class="modal-box">
+    <div class="modal-header"><div class="modal-title">🌿 Fertilizer Calculator</div><button class="modal-close" onclick="closeModal('fertilizerModal')">✕</button></div>
+    <div class="form-group"><label class="form-label">Crop Type</label><select class="form-select" id="fCrop"><option>Wheat</option><option>Rice</option><option>Maize</option><option>Millets</option><option>Sorghum</option><option>Tomato</option><option>Cotton</option><option>Potato</option><option>Soybean</option><option>Groundnut</option><option>Onion</option><option>Chilli</option><option>Sugarcane</option><option>Sunflower</option></select></div>
+    <div class="form-group"><label class="form-label">Unit</label><div class="unit-row"><button class="unit-btn active" onclick="setUnit(this,'acre')">Acre</button><button class="unit-btn" onclick="setUnit(this,'hectare')">Hectare</button><button class="unit-btn" onclick="setUnit(this,'gunta')">Gunta</button></div></div>
+    <div class="form-group"><label class="form-label">Field Area</label><input type="number" class="form-input" id="fArea" value="1" min="0.1" step="0.1"></div>
+    <div class="form-group"><label class="form-label">Growth Stage</label><select class="form-select" id="fStage"><option>Sowing / Basal</option><option>Vegetative</option><option>Flowering</option><option>Fruiting / Grain Filling</option></select></div>
+    <button class="calc-btn" onclick="calcFertilizer()">Calculate Fertilizer Requirements</button>
+    <div class="result-box" id="fertResult"><div class="npk-grid"><div class="npk-card"><div class="npk-label">N (Nitrogen)</div><div class="npk-value" id="nVal">—</div><div class="npk-unit">kg</div></div><div class="npk-card"><div class="npk-label">P (Phosphorus)</div><div class="npk-value" id="pVal">—</div><div class="npk-unit">kg</div></div><div class="npk-card"><div class="npk-label">K (Potassium)</div><div class="npk-value" id="kVal">—</div><div class="npk-unit">kg</div></div></div><div class="result-text" id="fertDetails"></div></div>
+  </div>
+</div>
+ 
+<div class="modal-overlay" id="pesticideModal" onclick="closeModalOnOverlay(event,'pesticideModal')">
+  <div class="modal-box">
+    <div class="modal-header"><div class="modal-title">🛡️ Pesticide Calculator</div><button class="modal-close" onclick="closeModal('pesticideModal')">✕</button></div>
+    <div class="form-group"><label class="form-label">Pest / Disease</label><select class="form-select" id="pPest"><option>Aphids</option><option>Leaf Blight</option><option>Powdery Mildew</option><option>Root Rot</option><option>Whitefly</option><option>Stem Borer</option><option>Armyworm</option></select></div>
+    <div class="form-group"><label class="form-label">Pesticide</label><select class="form-select" id="pPesticide"><option>Mancozeb 75% WP</option><option>Chlorpyrifos 20% EC</option><option>Imidacloprid 17.8% SL</option><option>Propiconazole 25% EC</option><option>Tricyclazole 75% WP</option><option>Emamectin benzoate 5% SG</option><option>Copper Oxychloride 50% WP</option></select></div>
+    <div class="form-group"><label class="form-label">Tank Capacity (Litres)</label><input type="number" class="form-input" id="pTank" value="15"></div>
+    <div class="form-group"><label class="form-label">Field Area (Acres)</label><input type="number" class="form-input" id="pArea" value="1" step="0.5"></div>
+    <button class="calc-btn" onclick="calcPesticide()">Calculate Dosage</button>
+    <div class="result-box" id="pestResult"></div>
+  </div>
+</div>
+ 
+<div class="modal-overlay" id="farmingModal" onclick="closeModalOnOverlay(event,'farmingModal')">
+  <div class="modal-box">
+    <div class="modal-header"><div class="modal-title">📊 Profit Calculator</div><button class="modal-close" onclick="closeModal('farmingModal')">✕</button></div>
+    <div class="form-group"><label class="form-label">Crop</label><select class="form-select" id="fcCrop"><option>Wheat</option><option>Rice</option><option>Maize</option><option>Millets</option><option>Sorghum</option><option>Tomato</option><option>Cotton</option><option>Potato</option><option>Soybean</option><option>Groundnut</option><option>Sugarcane</option><option>Sunflower</option></select></div>
+    <div class="form-group"><label class="form-label">Field Area (Acres)</label><input type="number" class="form-input" id="fcArea" value="2"></div>
+    <div class="form-group"><label class="form-label">Seed Cost (₹)</label><input type="number" class="form-input" id="fcSeed" value="2000"></div>
+    <div class="form-group"><label class="form-label">Fertilizer Cost (₹)</label><input type="number" class="form-input" id="fcFert" value="3500"></div>
+    <div class="form-group"><label class="form-label">Labour Cost (₹)</label><input type="number" class="form-input" id="fcLabour" value="5000"></div>
+    <div class="form-group"><label class="form-label">Expected Market Price (₹/Quintal)</label><input type="number" class="form-input" id="fcPrice" value="2100"></div>
+    <button class="calc-btn" onclick="calcFarming()">Calculate Profit & ROI</button>
+    <div class="result-box" id="farmResult"></div>
+  </div>
+</div>
+ 
+<div class="modal-overlay" id="irrigationModal" onclick="closeModalOnOverlay(event,'irrigationModal')">
+  <div class="modal-box">
+    <div class="modal-header"><div class="modal-title">💧 Irrigation Planner</div><button class="modal-close" onclick="closeModal('irrigationModal')">✕</button></div>
+    <div class="form-group"><label class="form-label">Crop</label><select class="form-select" id="irCrop"><option>Wheat</option><option>Rice</option><option>Maize</option><option>Millets</option><option>Sorghum</option><option>Tomato</option><option>Cotton</option><option>Potato</option><option>Soybean</option><option>Groundnut</option><option>Sugarcane</option><option>Sunflower</option></select></div>
+    <div class="form-group"><label class="form-label">Growth Stage</label><select class="form-select" id="irStage"><option>Sowing</option><option>Vegetative</option><option>Flowering</option><option>Maturity</option></select></div>
+    <div class="form-group"><label class="form-label">Soil Type</label><select class="form-select" id="irSoil"><option>Sandy</option><option>Sandy Loam</option><option>Loamy</option><option>Clay Loam</option><option>Clay</option></select></div>
+    <div class="form-group"><label class="form-label">Field Area (Acres)</label><input type="number" class="form-input" id="irArea" value="1"></div>
+    <button class="calc-btn" onclick="calcIrrigation()">Get Irrigation Schedule</button>
+    <div class="result-box" id="irriResult"></div>
+  </div>
+</div>
+ 
+<div class="modal-overlay" id="soilModal" onclick="closeModalOnOverlay(event,'soilModal')">
+  <div class="modal-box">
+    <div class="modal-header"><div class="modal-title">🪱 Soil Health Analyzer</div><button class="modal-close" onclick="closeModal('soilModal')">✕</button></div>
+    <div class="form-group"><label class="form-label">Soil pH (4.0–9.0)</label><input type="number" class="form-input" id="sPH" value="6.5" step="0.1" min="4" max="9"></div>
+    <div class="form-group"><label class="form-label">Organic Carbon (%)</label><input type="number" class="form-input" id="sOC" value="0.4" step="0.01"></div>
+    <div class="form-group"><label class="form-label">Nitrogen (kg/ha)</label><input type="number" class="form-input" id="sN" value="180"></div>
+    <div class="form-group"><label class="form-label">Phosphorus (kg/ha)</label><input type="number" class="form-input" id="sP" value="12"></div>
+    <div class="form-group"><label class="form-label">Potassium (kg/ha)</label><input type="number" class="form-input" id="sK" value="150"></div>
+    <button class="calc-btn" onclick="calcSoil()">Analyze Soil Health</button>
+    <div class="result-box" id="soilResult"></div>
+  </div>
+</div>
+ 
+<div class="modal-overlay" id="yieldModal" onclick="closeModalOnOverlay(event,'yieldModal')">
+  <div class="modal-box">
+    <div class="modal-header"><div class="modal-title">📈 Yield Predictor</div><button class="modal-close" onclick="closeModal('yieldModal')">✕</button></div>
+    <div class="form-group"><label class="form-label">Crop</label><select class="form-select" id="yCrop"><option>Wheat</option><option>Rice</option><option>Maize</option><option>Millets</option><option>Sorghum</option><option>Tomato</option><option>Cotton</option><option>Potato</option><option>Soybean</option><option>Groundnut</option><option>Sugarcane</option><option>Sunflower</option></select></div>
+    <div class="form-group"><label class="form-label">Field Area (Acres)</label><input type="number" class="form-input" id="yArea" value="2"></div>
+    <div class="form-group"><label class="form-label">Irrigation Method</label><select class="form-select" id="yIrri"><option>Drip</option><option>Sprinkler</option><option>Flood</option><option>Rainfed</option></select></div>
+    <div class="form-group"><label class="form-label">Soil Health</label><select class="form-select" id="ySoil"><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option></select></div>
+    <button class="calc-btn" onclick="calcYield()">Predict Yield & Revenue</button>
+    <div class="result-box" id="yieldResult"></div>
+  </div>
+</div>
+ 
+<div class="notif-toast" id="toastNotif"></div>
+</body>
+</html>
