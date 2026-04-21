@@ -16,6 +16,7 @@ This project aims to bridge the gap between traditional farming and modern AI-ba
 🤖 AI Chatbot (Gemini Integration) for farming guidance
 🌾 Multi-Crop Support (Rice, Wheat, Tomato, Cotton, etc.)
 🧠 AI Models Used
+
 Convolutional Neural Networks (CNN)
 Transfer Learning Techniques
 ResNet50 (primary model)
@@ -39,6 +40,7 @@ Other Tools
 Gemini API (Chatbot)
 JSON APIs
 PlantVillage Dataset
+
 📂 System Architecture
 User uploads crop leaf image
 Image is preprocessed (resize, normalize)
@@ -46,33 +48,41 @@ CNN model predicts disease
 Output mapped to disease class
 Advisory system provides treatment & prevention
 Results displayed on web interface
+
 🌍 Supported Crops & Diseases
 15+ crops (Rice, Wheat, Sugarcane, Tomato, etc.)
 60+ disease classes
 Includes severity levels and recommendations
+
 🎯 Objectives
 Detect crop diseases accurately using AI
 Predict risks using environmental data
 Provide intelligent advisory system
 Build a scalable and user-friendly platform
 Enable real-time decision-making for farmers
+
 📊 Dataset
 PlantVillage Dataset
 50,000+ images
 38+ disease categories
+
 📈 Results
 High accuracy with deep learning models
 Efficient real-time predictions
 Balanced performance vs computation trade-off
+
 🔮 Future Scope
 Integration with IoT sensors
 Mobile application deployment
 Real-time weather API integration
 Edge AI for offline predictions
 Expansion to more crops & diseases
+
 👩‍💻 Authors
 Aastha Patel
+
 📜 License
 This project is developed for academic purposes under B.Tech (CSE) at Indus University.
+
 ⭐ Contribution
 Feel free to fork this repository, raise issues, or contribute to improve AgroSense AI!
